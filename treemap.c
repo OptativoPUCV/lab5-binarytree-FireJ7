@@ -51,49 +51,37 @@ TreeMap * createTreeMap(int (*lower_than) (void* key1, void* key2))
 
 void insertTreeMap(TreeMap * tree, void* key, void * value) 
 {
-    TreeNode * new_node = createTreeNode(key, value); // Creamos un nuevo nodo con la llave y el valor dados
-    if (tree->root == NULL) // Si el árbol está vacío, el nuevo nodo se convierte en la raíz
+    if (tree == NULL || tree->root == NULL)
     {
-        tree->root = new_node;
-        tree->current = new_node;
+        tree->root = createTreeNode(key, value);
+        tree->current = tree->root;
+        
     }
-    else // Si el árbol no está vacío, buscamos la posición adecuada para insertar el nuevo nodo
+    else
     {
+        TreeNode * aux = tree->root;
         TreeNode * parent = NULL;
-        TreeNode * current = tree->root;
-        // Buscamos la posición adecuada para insertar el nuevo nodo
-        while (current != NULL)
+        while (aux != NULL)
         {
-            parent = current;
-            if (tree->lower_than(key, current->pair->key) == 1) // Si la llave es menor que la del nodo actual, nos movemos a la izquierda
+            parent = aux;
+            if (is_equal(tree, key, aux->pair->key))
             {
-                current = current->left;
-            }
-            else // Si la llave es mayor que la del nodo actual, nos movemos a la derecha
-            {
-                current = current->right;
-            }
-        }
-        // Insertamos el nuevo nodo como hijo del nodo adecuado
-        if (parent == NULL)
-        {
-            // Handle case where tree is empty
-            tree->root = new_node;
-        }
-        else
-        {
-            if (tree->lower_than(key, parent->pair->key) == 1)
-            {
-                parent->left = new_node;
+                return;
             }
             else
             {
-                parent->right = new_node;
+                if (tree->lower_than(key, aux->pair->key) == 1)
+                {
+                    aux = aux->left;
+                    
+                }
+                else
+                {
+                    aux = aux->right;
+                }
             }
         }
     }
-    tree->current = new_node; // Actualizamos el nodo actual del árbol
-
 }
 
 TreeNode * minimum(TreeNode * x){
