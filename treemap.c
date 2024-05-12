@@ -150,32 +150,32 @@ Pair * searchTreeMap(TreeMap * tree, void* key)
 
 Pair * upperBound(TreeMap * tree, void* key) 
 {
-    TreeNode * aux = tree->root;
-    while(aux != NULL)
-    {
-        if(is_equal(tree, key, aux->pair->key) == 1)
-        {
-            tree->current = aux;
-            return aux->pair;
+    NodoArbol * aux = arbol->raiz;
+    NodoArbol * ultimoVisitado = NULL;
+
+    while(aux != NULL) {
+        ultimoVisitado = aux;
+
+        if(es_igual(arbol, llave, aux->par->llave)) {
+            arbol->actual = aux;
+            return aux->par;
         }
-        if(tree->lower_than(key, aux->pair->key) == 1)
-        {
-            aux = aux->left;
-                
+        else if(arbol->menor_que(llave, aux->par->llave)) {
+            aux = aux->izquierda;
         }
-        else
-        {
-            aux = aux->right;
+        else {
+            aux = aux->derecha;
         }
-    
     }
-    if(tree->lower_than(key, aux->pair->key) == 1)
-    {
-        tree->current = aux;
-        return aux->pair;
+
+    // Si aux es NULL, significa que la llave no se encontró en el árbol.
+    // Devolvemos el par asociado al último nodo visitado,
+    // que sería el nodo que sería el límite superior si la llave
+    // se insertara en el árbol.
+    if(ultimoVisitado != NULL) {
+        arbol->actual = ultimoVisitado;
+        return ultimoVisitado->par;
     }
-    
-    return NULL;
 }
 
 Pair * firstTreeMap(TreeMap * tree) 
